@@ -6,10 +6,18 @@
  * Time: 19:28
  */
 
+ini_set('display_errors',1);
+error_reporting(E_ERROR);
+
+//API localhost
+$api_key ='fd32494b7c9eadee92ac495ecb273582';
+//API produccion
+//$api_key = '82b0e7ff63538cf481190e5dc40d3e6f';
+
 $msg_out = '';
 $url_api = 'http://www.idealista.com/labs/propertyMap.htm?action=json';
 $a_params = array(
-    'k' => 'fd32494b7c9eadee92ac495ecb273582',
+    'k' => $api_key,
     'operation' => 'rent',
     'center' => 'long,lat',
     'distance' => 'meters',
@@ -34,7 +42,7 @@ $a_params = array(
 
 if ($_REQUEST['k']) {
     foreach ($_REQUEST as $key => $value) {
-        if ($value != '') {
+        if ($value != '' && !in_array($key,$a_params)) {
             $api_filter .= '&' . $key . '=' . $value;
         }
     }
@@ -45,18 +53,20 @@ if ($_REQUEST['k']) {
         $msg_out .= '<h3>' . $res[0] . '</h3>';
         foreach ($res[1]->elementList as $piso) {
             ob_start();
-            var_dump($piso);
+            //var_dump($piso);
             $msg_vardump = ob_get_clean();
             $msg_out .= '
-                    <div class="row">
-                        <div class="col-md-2"><img src="'.$piso->thumbnail.'"></div>
+                    <div class="row alert alert-warning">
+                        <div class="col-md-2"><img src="'.$piso->thumbnail.'"><br><br></div>
                         <div class="col-md-8">
                             <b>'.$piso->district.'</b> '.$piso->address.'
-                            <span class="glyphicon glyphicon-map-marker"> </span>
+                            <a href="https://www.google.es/maps/place/PISITO/@'.$piso->latitude.','.$piso->longitude.',15z/" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a><br>
+                            '.$piso->price.' €
                             <br>
                             '.$msg_vardump.'
                         </div>
                         <div class="col-md-2"><img src="'.$piso->agentLogo.'"></div>
+
                     </div>';
         }
     }
