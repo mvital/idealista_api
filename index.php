@@ -53,14 +53,14 @@ if ($_REQUEST['k']) {
         $msg_out .= '<h3>' . $res[0] . '</h3>';
         foreach ($res[1]->elementList as $piso) {
             ob_start();
-            //var_dump($piso);
+            var_dump($piso);
             $msg_vardump = ob_get_clean();
             $msg_out .= '
                     <div class="row alert alert-warning">
                         <div class="col-md-2"><img src="'.$piso->thumbnail.'"><br><br></div>
                         <div class="col-md-8">
                             <b>'.$piso->district.'</b> '.$piso->address.'
-                            <a href="https://www.google.es/maps/place/PISITO/@'.$piso->latitude.','.$piso->longitude.',15z/" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a><br>
+                            <a href="https://www.google.es/maps/place/'.urlencode($piso->address.' '.$piso->province).'/@'.$piso->latitude.','.$piso->longitude.',15z/" target="_blank"><span class="glyphicon glyphicon-map-marker"></span></a><br>
                             '.$piso->price.' €
                             <br>
                             '.$msg_vardump.'
